@@ -20,7 +20,7 @@ We encourage anyone that's interested in supporting the project to submit featur
 ## License
 The Maxcape source code is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
 
-##Contributors
+## Contributors
 - Brian (Astrect)
 - Tyler (Sauerpauer)
 - Fox (OGKingFox)
