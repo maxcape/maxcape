@@ -1,0 +1,8 @@
+<div class="row my-5">
+    <div class="col-sm-12 col-xl-12">
+        <h3>{{ post.title }}</h3>
+        <p class="card-text">Posted by {{ link_to('user/view/'~author.username, getFormattedName(author.privilege_level, author.username)) }} on {{ date("F d, Y", post.date|strtotime) }}</p>
+        <hr>
+        {{ postBody }}
+    </div>
+</div>

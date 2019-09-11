@@ -1,0 +1,31 @@
+<div class="row" style="margin-top: 100px;">
+    <div class="col-sm-12 col-xl-4 offset-xl-4">
+
+        <div class="text-center mb-5">
+            <h4 class="text-uppercase text-primary mb-0">MAXCAPE</h4>
+            <small class="text-muted">RESET</small>
+        </div>
+        {{ content() }}
+
+        {{ form('recover/reset/'~key, 'method' : 'post') }}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fal fa-lock fa-fw"></i></div>
+            </div>
+            {{ password_field('pass', 'class' : 'form-control', 'placeholder' : 'New Password') }}
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fal fa-lock fa-fw"></i></div>
+            </div>
+            {{ password_field('repass', 'class' : 'form-control', 'placeholder' : 'Repeat Password') }}
+        </div>
+
+        <div class="form-group ">
+            {{ submit_button('Set Password', 'class' : 'btn btn-primary px-5') }}
+        </div>
+        {{ hidden_field(security.getTokenKey(), 'value' : security.getToken()) }}
+        {{ end_form() }}
+    </div>
+</div>

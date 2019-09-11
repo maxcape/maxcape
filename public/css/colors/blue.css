@@ -1,0 +1,60 @@
+header {
+    background: #3bafda linear-gradient(135deg,#3bafda 0,#7bc9e6 80%);
+    z-index: 1;
+}
+a {
+    color: #3bafda;
+}
+a:hover, a:focus, a:active {
+    color: #7bc9e6;
+    text-decoration: none;
+}
+.dropdown-item:hover, .dropdown:active, .dropdown:focus {
+    color: #3bafda;
+}
+.footer-links li a:hover, .footer-links li a:hover:before {
+    color:#3bafda;
+}
+.btn-primary {
+    background-color: #3bafda;
+    border: 1px solid #3bafda;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-primary.focus, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open > .dropdown-toggle.btn-primary, .btn-primary:not([disabled]):not(.disabled).active, .btn-primary:not([disabled]):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+    background-color: #7bc9e6;
+    border-color: #7bc9e6;
+}
+.text-info {
+    color: #58c9e9 !important;
+}
+h1,h2,h3,h4,h5,h6 {
+    font-family: "Montserrat-Bold", sans-serif;
+}
+.text-primary {
+    color: #3bafda !important;
+}
+.border-primary {
+    border-color: #3bafda !important;
+}
+.bg-primary {
+    background-color: #3bafda !important;
+}
+a.text-primary {
+    color: #3bafda !important;
+}
+a.text-primary:hover, a.text-primary:active, a.text-primary:hover {
+    color: #7bc9e6 !important;
+    text-decoration: none;
+}
+.checkbox-primary input[type="checkbox"]:checked + label::before {
+    background-color: #3bafda;
+    border-color: #3bafda;
+}
+.tabs-bordered li a.active {
+    border-bottom: 2px solid #3bafda !important;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    border-bottom: 2px solid #3bafda !important;
+}
+.skills .progress .bg-primary {
+    background-color: #3bafda !important;
+}

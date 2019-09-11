@@ -1,0 +1,279 @@
+<div class="row my-5">
+    <div class="col-sm-12">
+        <div class="alert alert-danger" role="alert">
+            This page is currently in <strong>Beta</strong>. Please report any issues you might discover.
+        </div>
+        {{ content() }}
+    </div>
+    <div class="col-sm-12 col-xl-8">
+
+        <div class="card-group">
+            <div class="card">
+                {{image('img/capes/max/base.png', 'id': 'mbase', 'style' : 'display: none;') }}
+                {{image('img/capes/max/color1.png', 'id': 'mc1', 'style' : 'display: none;') }}
+                {{image('img/capes/max/color2.png', 'id': 'mc2', 'style' : 'display: none;') }}
+                {{image('img/capes/max/color3.png', 'id': 'mc3', 'style' : 'display: none;') }}
+                {{image('img/capes/max/color4.png', 'id': 'mc4', 'style' : 'display: none;') }}
+                {{image('img/capes/max/trim.png', 'id': 'mtrim', 'style' : 'display: none;') }}
+                {{image('img/capes/comp/base.png', 'id': 'cbase', 'style' : 'display: none;') }}
+                {{image('img/capes/comp/color1.png', 'id': 'cc1', 'style' : 'display: none;') }}
+                {{image('img/capes/comp/color2.png', 'id': 'cc2', 'style' : 'display: none;') }}
+                {{image('img/capes/comp/color3.png', 'id': 'cc3', 'style' : 'display: none;') }}
+                {{image('img/capes/comp/color4.png', 'id': 'cc4', 'style' : 'display: none;') }}
+                {{image('img/capes/comp/trim.png', 'id': 'ctrim', 'style' : 'display: none;') }}
+
+                <div id="canvascontainer-max">
+                    <canvas id="mbasecanvas" width="238" height="425"></canvas>
+                    <canvas id="mccanvas1" width="238" height="425"></canvas>
+                    <canvas id="mccanvas2" width="238" height="425"></canvas>
+                    <canvas id="mccanvas3" width="238" height="425"></canvas>
+                    <canvas id="mccanvas4" width="238" height="425"></canvas>
+                    <canvas id="mtrimcanvas" width="238" height="425"></canvas>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="displayCape('m')">Generate Image</button>
+            </div>
+            <div class="card">
+                <div id="output">
+                    <div id="minicolors">
+                        <div class="minicolor" id="minicolor1" style="background-color:hsl(356, 65%, 56%);" data-h="356" data-s="65" data-l="56"></div>
+                        <div class="minicolor" id="minicolor2" style="background-color:hsl(356, 52%, 47%);" data-h="356" data-s="52" data-l="47"></div>
+                        <div class="minicolor" id="minicolor3" style="background-color:hsl(356, 52%, 37%);" data-h="356" data-s="52" data-l="37"></div>
+                        <div class="minicolor" id="minicolor4" style="background-color:hsl(344, 38%, 25%);" data-h="344" data-s="38" data-l="25"></div>
+                    </div>
+
+                    <div id="colors">
+                        <div class="color" id="color1" style="background-color:hsl(356, 65%, 56%);" data-h="356" data-s="65" data-l="56" data-color="1"></div>
+                        <div class="color" id="color2" style="background-color:hsl(356, 52%, 47%);" data-h="356" data-s="52" data-l="47" data-color="2"></div>
+                        <div class="color" id="color3" style="background-color:hsl(356, 52%, 37%);" data-h="356" data-s="52" data-l="37" data-color="3"></div>
+                        <div class="color" id="color4" style="background-color:hsl(344, 38%, 25%);" data-h="344" data-s="38" data-l="25" data-color="4"></div>
+
+                    </div>
+
+                    <div class="input-group mb-3 pr-5">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">H</span>
+                        </div>
+                        <input class="form-control" id="rshue" type="text" disabled>
+                    </div>
+
+                    <div class="input-group mb-3 pr-5">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">S</span>
+                        </div>
+                        <input class="form-control" id="rssat" type="text" disabled>
+                    </div>
+
+                    <div class="input-group mb-3 pr-5">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">L</span>
+                        </div>
+                        <input class="form-control" id="rslit" type="text" disabled>
+                    </div>
+
+                    {% if session.has("user_auth") %}
+                    <button type="button" class="btn btn-primary" id="savebtn">Save Cape Design</button>
+                    {% else %}
+                    <p class="ml-1 mt-4 mb-1">{{link_to('login', 'Login')}} to save your design.</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card">
+                <div id="canvascontainer-comp">
+                    <canvas id="cbasecanvas" width="221" height="425"></canvas>
+                    <canvas id="cccanvas1" width="221" height="425"></canvas>
+                    <canvas id="cccanvas2" width="221" height="425"></canvas>
+                    <canvas id="cccanvas3" width="221" height="425"></canvas>
+                    <canvas id="cccanvas4" width="221" height="425"></canvas>
+                    <canvas id="ctrimcanvas" width="221" height="425"></canvas>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="displayCape('c')">Generate Image</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Your Designs</h6>
+            </div>
+
+            {% if session.has("user_auth") %}
+            <div class="microcolors">
+
+                <table class="table table-hover table-striped mb-0">
+                    <tbody>
+                    {% for data in designs %}
+
+                    {% set decoded = data.color_data|json_decode %}
+
+                    <tr class="applycapestyle">
+                        <td><span data-toggle="tooltip" data-placement="right" title="" data-original-title="{{data.cape_name|capitalize}}">{{ limit_string(data.cape_name|capitalize, 15) }}</span></td>
+                        <td>
+                            {% for key in decoded %}
+                            <div class="microcolor" style="background-color:hsl({{key.h}}, {{key.s}}%, {{key.l}}%)" data-h="{{key.h}}" data-s="{{key.s}}" data-l="{{key.l}}"></div>
+                            {% endfor %}
+
+                        </td>
+                        <td>
+                          <span class="text-{{ data.vote_count < 1 ? 'muted' : 'success' }}">
+                                   {{ (data.vote_count < 1 ? '' : '+') ~ data.vote_count }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+
+            <p class="ml-1 mt-1 mb-1">You must {{link_to('login', 'login')}} to see your designs.</p>
+            {% endif %}
+        </div>
+
+</div>
+</div>
+
+    <div class="my-5">
+        <div id="vote_err"></div>
+        <div id="stats">
+            Loading stats....<i class="fal fa-spinner fa-pulse"></i>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="cape-preview" tabindex="-1" role="dialog" aria-labelledby="cape-preview" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content bg-dark">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Cape Preview</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                        <div id="imageslot" class="text-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!---- End preview modal !----->
+
+{% if session.has("user_auth") %}
+<!-- Modal -->
+<div class="modal fade" id="cape-save" tabindex="-1" role="dialog" aria-labelledby="cape-save" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Save Your Cape</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                {{ form('designer', 'method' : 'post', 'id' : 'savecape') }}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fal fa-user fa-fw"></i></div>
+                    </div>
+                    {{ text_field('capename', 'class' : 'form-control') }}
+                </div>
+
+                {{ submit_button('Save Design', 'class' : 'btn btn-primary px-5') }}
+
+                {{ end_form() }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!---- End Save modal !----->
+{{ javascript_include("js/designer/cape.js") }}
+
+<script>
+    $(document).on("click", '#savebtn', function(e) {
+        if ($(this).hasClass("disabled")) {
+            e.preventDefault();
+            return true;
+        }
+
+        $('#cape-save').modal();
+    });
+
+    $(document).on("click", 'button', function(e) {
+        if ($(this).hasClass("disabled")) {
+            e.preventDefault();
+            return true;
+        }
+    });
+
+    $(document).on('click', '.applycapestyle', function(event) {
+        applyCapeStyle($(this));
+
+        $(document).find("#savebtn").addClass("disabled");
+    });
+
+    setTimeout(function() {
+        $.post('{{ url("designer/stats") }}', function(data) {
+           $('#stats').html(data);
+        });
+    }, 1000);
+
+    function applyCapeStyle(element) {
+        //Remove selected from all
+        $(".applycapestyle").removeClass("selectedcapestyle");
+        //Apply selected to this one
+        element.addClass("selectedcapestyle");
+
+        element.find(".microcolor").each(function (index) {
+            //Get colors of each microcolor and set those to the color and minicolor that corresponds to it.
+            var target = $("#color" + (index + 1));
+            var mini = $("#minicolor" + (index + 1));
+
+            var h = $(this).attr("data-h"),
+                s = $(this).attr("data-s"),
+                l = $(this).attr("data-l");
+
+            target.attr("data-h", h);
+            target.attr("data-s", s);
+            target.attr("data-l", l);
+            target.css("background-color", $(this).css("background-color"));
+
+            mini.attr("data-h", h);
+            mini.attr("data-s", s);
+            mini.attr("data-l", l);
+            mini.css("background-color", $(this).css("background-color"));
+            target.trigger("changedColor");
+        });
+    }
+</script>
+
+{% if session.has("user_auth") %}
+<script>
+    $('#savecape').submit(function(event) {
+        event.preventDefault();
+
+        var savebtn = $(document).find("#savebtn");
+
+        if (savebtn.hasClass("disabled")) {
+            alert("Try making a unique design first!");
+            return;
+        }
+
+        if ($("#capename").val().length > 0) {
+
+            $.post(path+"/save", {
+                capename: $("#capename").val(),
+                color1_data: JSON.stringify(getHSL("color1")),
+                color2_data: JSON.stringify(getHSL("color2")),
+                color3_data: JSON.stringify(getHSL("color3")),
+                color4_data: JSON.stringify(getHSL("color4"))
+            }, function (data) {
+                window.location.reload();
+            });
+        }
+    });
+</script>
+{% endif %}

@@ -1,0 +1,16 @@
+.idea/workspace.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/maxcape-website.iml
+.idea/*
+public/config.php
+public/error_logs.txt
+app/plugins/SecurityPlugin.php
+app/compiled/*.compiled
+app/compiled/bestiary/monsters/*.cache
+app/compiled/cache/*.cache
+app/compiled/clans/*.cache
+app/compiled/userdata/*.cache
+.idea/discord.xml
+.idea/misc.xml
+.idea/maxcape.iml

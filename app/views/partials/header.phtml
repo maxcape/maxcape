@@ -1,0 +1,60 @@
+<header>
+    <div class="container">
+        <div class="theme float-right p-3 rounded-circle " id="theme">
+            <i class="fal fa-paint-roller"></i>
+        </div>
+        <i class="fal fa-chart-bar float-left fa-4x mr-3"></i>
+        <h1 class="my-0 text-uppercase"> MaxCape</h1>
+        The most modern RS tracking website.
+    </div>
+</header>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm mb-0">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">{{ link_to('', 'Home', 'class' : 'nav-link') }}</li>
+                <li class="nav-item">{{ link_to('bestiary', 'Bestiary', 'class' : 'nav-link') }}</li>
+                <li class="nav-item">{{ link_to('clans', 'Clans', 'class' : 'nav-link') }}</li>
+                <li class="nav-item">{{ link_to('signature', 'Signatures', 'class' : 'nav-link') }}</li>
+                <li class="nav-item">{{ link_to('designer', 'Cape Designer', 'class' : 'nav-link') }}</li>
+                <li class="nav-item">{{ link_to('vote', 'Suggestions <sup class="badge badge-danger small">NEW</sup>', 'class' : 'nav-link') }}</li>
+                <li class="nav-item">{{ link_to('donate', 'Donate', 'class' : 'nav-link text-primary') }}</li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item mr-3">
+                    {{ form('profile/view', 'method' : 'post') }}
+                    {{ text_field('rsn', 'class' : 'form-control input-sm badge-pill px-3 py-1 mt-1', 'placeholder' : 'Search RSN...') }}
+                    {{ hidden_field(security.getTokenKey(), 'value' : security.getToken()) }}
+                    {{ end_form() }}
+                </li>
+                {% if session.has("user_auth") %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ user.username }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {{ link_to('profile', 'My Account', 'class' : 'dropdown-item') }}
+                        {% if user.privilege_level is 'Developer' %}
+                        {{ link_to('admin', 'AdminCP', 'class' : 'dropdown-item') }}
+                        {% endif %}
+                        {{ link_to('index/logout', 'Logout', 'class' : 'dropdown-item') }}
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item">{{ link_to('login', 'Login', 'class' : 'nav-link') }}</li>
+                <li class="nav-item">{{ link_to('register', 'Create Account', 'class' : 'nav-link') }}</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="themebox">
+    {% for key, value in constant("theme_colors") %}
+        {{ link_to('index/theme/'~key, '', 'class' : 'theme-color blue', 'style' : 'background-color: '~value) }}
+    {% endfor %}
+</div>

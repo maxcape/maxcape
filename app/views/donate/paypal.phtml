@@ -1,0 +1,91 @@
+<div id="pp-{{ item['id'] }}"></div>
+
+<script>
+    var buttonData = {
+        env: '{{ constant("paypal_mode") }}',
+        style: {
+            label: 'pay',
+            size:  'medium', // small | medium | large | responsive
+            shape: 'pill',  // pill | rect
+            color: 'blue',  // gold | blue | silver | black
+            tagline: false,
+            branding: 'Maxcape'
+        },
+
+        client: {
+            sandbox:    '{{ constant("sandbox_key") }}',
+            production: '{{ constant("production_key") }}'
+        },
+
+        funding: {
+            disallowed: [ paypal.FUNDING.CARD, paypal.FUNDING.ELV ]
+        },
+
+        commit: true,
+
+        payment: function(data, actions) {
+            return actions.payment.create({
+                payment: {
+                    "transactions": [{
+                        "amount": {
+                            "total"     : "{{ item['price'] }}",
+                            "currency"  : "USD",
+                            "details"   : {
+                                "subtotal": "{{ item['price'] }}"
+                            }
+                        },
+                        "item_list": {
+                            "items": [
+                                {
+                                    'name'      : '{{ item["title"] }}',
+                                    'sku'       : '{{ item["id"] }}',
+                                    'price'     : '{{ item["price"] }}',
+                                    'currency'  : 'USD',
+                                    'quantity'  : 1,
+                                    'description' : 'Premium Membership for Maxcape.com'
+                                }
+                            ]
+                        },
+                        "description"   : "Maxcape",
+                        "custom"        : "{{ user is defined ? user.username : '' }}"
+                    }]
+                },
+                experience: {
+                    input_fields: {
+                        no_shipping: 1
+                    }
+                }
+            });
+        },
+
+        onAuthorize: function(paymentData, actions) {
+            return actions.payment.get().then(function(details) {
+                var transaction = details.transactions[0];
+                var username    = transaction.custom;
+
+                if (!username.trim()) {
+                    $('#postdata').html("<div class=\"alert alert-danger\">Your session has expired.</div>");
+                    return false;
+                }
+
+                return actions.payment.execute().then(function(response) {
+                    $.post("{{ url('donate/process') }}", {
+                        postdata: response
+                    }).done(function(data) {
+                        $('#postdata').html(data);
+                    });
+                });
+            })
+        },
+
+        onError: function(err) {
+            alert(err);
+        },
+
+        onCancel: function(data, actions) {
+            $('#postdata').html(data);
+        }
+    };
+
+    paypal.Button.render(buttonData, '#pp-{{ item["id"] }}');
+</script>

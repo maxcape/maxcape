@@ -1,0 +1,116 @@
+<div class="row">
+
+    <div class="col-sm-4">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Most Recent</h6>
+            </div>
+
+            <div class="microcolors">
+
+                <table class="table table-hover table-striped mb-0">
+                    <tbody>
+                    {% for data in recent25 %}
+
+                    {% set decoded = data.color_data|json_decode %}
+
+                    <tr class="applycapestyle">
+                        <td><span data-toggle="tooltip" data-placement="right" title="" data-original-title="{{data.cape_name|capitalize}}">{{ limit_string(data.cape_name|capitalize, 15) }}</span></td>
+                        <td>
+                            {% for key in decoded %}
+                            <div class="microcolor" style="background-color:hsl({{key.h}}, {{key.s}}%, {{key.l}}%)" data-h="{{key.h}}" data-s="{{key.s}}" data-l="{{key.l}}"></div>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <span class="text-success mr-2" id="vote-cape" data-cape="{{data.cape_id}}"><i class="fal fa-thumbs-up"></i></span>
+                        </td>
+                        <td>
+                            <span class="text-{{ data.vote_count < 1 ? 'muted' : 'success' }}">
+                                   {{ (data.vote_count < 1 ? '' : '+') ~ data.vote_count }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Top 100 - Month</h6>
+            </div>
+
+            <div class="microcolors">
+                <table class="table table-hover table-striped mb-0">
+                    <tbody>
+                    {% for data in top100month %}
+
+                    {% set decoded = data.color_data|json_decode %}
+
+                    <tr class="applycapestyle">
+                        <td><span data-toggle="tooltip" data-placement="right" title="" data-original-title="{{data.cape_name|capitalize}}">{{ limit_string(data.cape_name|capitalize, 15) }}</span></td>
+                        <td>
+                            {% for key in decoded %}
+                            <div class="microcolor" style="background-color:hsl({{key.h}}, {{key.s}}%, {{key.l}}%)" data-h="{{key.h}}" data-s="{{key.s}}" data-l="{{key.l}}"></div>
+                            {% endfor %}
+
+                        </td>
+                        <td>
+                            <span class="text-success mr-2" id="vote-cape" data-cape="{{data.cape_id}}"><i class="fal fa-thumbs-up"></i></span>
+                        </td>
+                        <td>
+                            <span class="text-{{ data.vote_count < 1 ? 'muted' : 'success' }}">
+                               {{ (data.vote_count < 1 ? '' : '+') ~ data.vote_count }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Top 100 - Overall</h6>
+            </div>
+            <div class="microcolors">
+                <table class="table table-hover table-striped mb-0">
+                    <tbody>
+                    {% for data in top100overall %}
+
+                    {% set decoded = data.color_data|json_decode %}
+
+                    <tr class="applycapestyle">
+                        <td><span data-toggle="tooltip" data-placement="right" title="" data-original-title="{{data.cape_name|capitalize}}">{{ limit_string(data.cape_name|capitalize, 15) }}</span></td>
+                        <td>
+                            {% for key in decoded %}
+                            <div class="microcolor" style="background-color:hsl({{key.h}}, {{key.s}}%, {{key.l}}%)" data-h="{{key.h}}" data-s="{{key.s}}" data-l="{{key.l}}"></div>
+                            {% endfor %}
+
+                        </td>
+                        <td>
+                            <span class="text-success mr-2" id="vote-cape" data-cape="{{data.cape_id}}"><i class="fal fa-thumbs-up"></i></span>
+                        </td>
+                        <td>
+                            <span class="text-{{ data.vote_count < 1 ? 'muted' : 'success' }}">
+                               {{ (data.vote_count < 1 ? '' : '+') ~ data.vote_count }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('[data-toggle="tooltip"]').tooltip();
+</script>

@@ -1,0 +1,20 @@
+<div class="row my-5">
+    {{partial('partials/admincp/sidebar') }}
+    <div class="col-sm-12 col-lg-8">
+        <script src="https://cdn.ckeditor.com/4.7.3/standard/ckeditor.js"></script>
+        {{ form('admin/addnews', 'method' : 'post') }}
+        <div class="form-group">
+            <label for="exampleFormControlInput1">Article Title</label>
+            {{ text_field('title', 'class' : 'form-control') }}
+        </div>
+
+        <div class="form-group">
+            {{ text_area('content', 'id' : 'editor1', 'class' : 'editor1') }}
+        </div>
+        {{ submit_button('Post Article', 'class' : 'btn') }}
+        {{ endform() }}
+        <script>
+            CKEDITOR.replace( 'editor1' );
+        </script>
+    </div>
+</div>

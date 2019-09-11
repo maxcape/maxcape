@@ -1,0 +1,173 @@
+<div class="row my-5">
+    <div class="col-sm-12 col-lg-8">
+        {{ content() }}
+        {% for post in posts %}
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                {% set formatTitle = replace(" ", "-", post.title|lowercase) %}
+                <h5 class="card-title my-0">{{ link_to('post/'~post.postid~'-'~formatTitle, post.title) }}</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-flex">
+                    <div class="text-center pr-3 author-block" style="width:170px;min-width: 170px;">
+                        <img src="https://services.runescape.com/m=avatar-rs/{{ post.rsn }}/chat.png" class="img-fluid rounded mt-2">
+                        <h6 class="mt-3 mb-0">{{ link_to('user/view/'~post.author, post.author) }}</h6>
+                        <small class="text-muted">{{ post.rank }}</small>
+
+                        <div class="mt-3">
+
+                        </div>
+                    </div>
+                    <div class="text-justify pr-2">
+                        {{ limit_string(post.content, 400) }}
+                        [{{ link_to('post/'~post.postid~'-'~formatTitle, 'Read Full Post') }}]
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="text-right">
+                    <div class="d-flex float-left mr-3">
+                        <div class="flex-fill pr-1">
+                            <a href="{{ url('index/?like='~post.postid~'&type=0') }}" rel="nofollow"
+                               class="btn btn-block btn-primary btn-sm"  data-toggle="tooltip" title="Like">
+                                <i class="fal fa-thumbs-up fa-fw"></i> {{ post.likes }}
+                            </a>
+                        </div>
+                        <div class="flex-fill pl-1">
+                            <a href="{{ url('index/?like='~post.postid~'&type=1') }}" rel="nofollow"
+                               class="btn btn-block btn-primary btn-sm" data-toggle="tooltip" title="Dislike">
+                                <i class="fal fa-thumbs-down fa-fw" ></i> {{ post.dislikes }}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="float-left text-muted d-lg-none d-sm-inline-block mt-1">
+                        Posted by {{ link_to('', post.author) }}
+                    </div>
+                    <small class="text-muted">{{ date("l, F d, Y h:i A", post.date|strtotime) }} </small>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="col-sm-12 col-lg-4">
+
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Statistics</h6>
+            </div>
+            <div class="list-group list-alternate list-group-flush">
+                <div class="list-group-item">
+                    <i class="fal fa-address-card fa-fw"></i>
+                    Total Names
+                    <span class="float-right small">{{ totalNames|number_format }}</span>
+                </div>
+                <div class="list-group-item">
+                    <i class="fal fa-search fa-fw"></i>
+                    Total Searches
+                    <span class="float-right small">{{ searchCount|number_format }}</span>
+                </div>
+                <div class="list-group-item">
+                    <i class="fal fa-search fa-fw"></i>
+                    Searches Today
+                    <span class="float-right small">{{ searchesToday|number_format }}</span>
+                </div>
+                <div class="list-group-item">
+                    <i class="fal fa-users fa-fw"></i>
+                    Total Users
+                    <span class="float-right small">{{ members|number_format }}</span>
+                </div>
+            </div>
+            <div class="card-body small text-muted py-2 text-center">
+                Data was reset on July 25, 2019 at 5am CST<br>
+                to improve accuracy.
+            </div>
+        </div>
+
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Recent Searches</h6>
+            </div>
+            <div class="list-group list-group-flush list-alternate">
+                {% for key, value in recent10 %}
+                <div class="list-group-item">
+                    {{ image('https://services.runescape.com/m=avatar-rs/'~key~'/chat.png', 'width' : '20px') }}
+                    {{ link_to('profile/view/'~replace(" ", "+", key), key|capitalize, 'rel' : 'nofollow') }}
+                    <span class="float-right small">{{ value['elapsed'] }}</span>
+                </div>
+                {% endfor %}
+
+            </div>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-header">
+                <h6 class="card-title my-0">
+                    <span class="float-right small text-muted mt-1">{{ discord.getMemberCount() }} Members</span>
+                    <i class="fab fa-discord"></i> {{ discord.data.name }}
+                </h6>
+            </div>
+            <div class="list-group list-group-flush list-alternate discord">
+                {% for member in discord_members %}
+                <div class="list-group-item">
+
+                    <div class="text-truncate float-left" style="max-width:140px;">
+                        <div class="float-left discord-avatar {{ member.status }}" style="background-image: url({{member.avatar_url}})"></div>
+                        {{ member.username }}
+                    </div>
+                    {% if member.game is defined %}
+                    <small class="float-right mt-1 text-muted">
+                        {{ member.game.name }}
+                    </small>
+                    {% endif %}
+
+                </div>
+                {% endfor %}
+            </div>
+            <div class="card-footer text-right">
+                {{ link_to('https://discord.gg/JTTsNpa', '<i class="fal fa-sign-in-alt fa-fw"></i> Connect', 'class' : 'btn btn-sm btn-primary px-4', false) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 ">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Users active in the last 10 minutes({{activeUsers|count}} members, {{activeGuests.count}} guests):</h6>
+            </div>
+            <div class="card-body">
+                {% for member in activeUsers %}
+                {% if member.rank is "Developer" %}
+                {{link_to('user/view/'~member.username, '<span class="text-danger"><i class="fas fa-wrench mr-1"></i>' ~ member.username ~ '</span>') ~ (loop.last ? '' : ', ') }}
+                {% else %}
+                {{link_to('user/view/'~member.username, member.username) ~ (loop.last ? '' : ', ') }}
+                {% endif %}
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+    {% if session.has("user_auth") and user.privilege_level is 'Developer' %}
+        <div class="col-sm-12 ">
+            <div class="card shadow mb-3">
+                <div class="card-header">
+                    <h6 class="card-title my-0">Users active in the last 24 hours({{dailyUsers|count}} members, {{dailyGuests.count}} guests):</h6>
+                </div>
+                <div class="card-body">
+                    {% for member in dailyUsers %}
+                    {% if member.rank is "Developer" %}
+                    {{link_to('user/view/'~member.username, '<span class="text-danger"><i class="fas fa-wrench mr-1"></i>' ~ member.username ~ '</span>') ~ (loop.last ? '' : ', ') }}
+                    {% else %}
+                    {{link_to('user/view/'~member.username, member.username) ~ (loop.last ? '' : ', ') }}
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
+            </div>
+    {% endif %}
+
+</div>

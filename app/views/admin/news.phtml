@@ -1,0 +1,48 @@
+<div class="row my-5">
+    {{partial('partials/admincp/sidebar') }}
+    <div class="col-sm-12 col-lg-8">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">News System</h6>
+            </div>
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Article Title</th>
+                    <th scope="col">Article Author</th>
+                    <th scope="col">Article Settings</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for post in posts.items %}
+                <tr>
+                    <th scope="row">{{post.postid}}</th>
+                    <td>{{post.title}}</td>
+                    <td>{{post.author}}</td>
+                    <td>
+                        {{link_to('admin/editnews/'~post.postid, '<i class="fal fa-edit"></i>', 'class' : 'btn btn-primary btn-sm') }}
+                        {{link_to('admin/deletenews/'~post.postid, '<i class="fal fa-trash-alt"></i>', 'class' : 'btn btn-danger btn-sm') }}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if posts.total_pages > 0 %}
+        <div class="row my-4">
+            <div class="" role="group" aria-label="Basic example" style="margin:auto;">
+                {{ link_to('admin/news/'~posts.first, '<i class="fas fa-angle-double-left"></i>', 'class' : 'btn btn-primary') }}
+                {{ link_to('admin/news/'~posts.before, '<i class="fas fa-angle-left"></i>', 'class' : 'btn btn-primary') }}
+
+                {{ link_to('admin/news/'~posts.before, 'Page '~posts.current~' of '~posts.total_pages, 'class' : 'btn btn-link disabled text-white') }}
+
+                {{ link_to('admin/news/'~posts.next, '<i class="fas fa-angle-right"></i>', 'class' : 'btn btn-primary') }}
+                {{ link_to('admin/news/'~posts.last, '<i class="fas fa-angle-double-right"></i>', 'class' : 'btn btn-primary') }}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>

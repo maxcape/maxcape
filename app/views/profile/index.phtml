@@ -1,0 +1,161 @@
+<div class="row my-5">
+    <div class="col-sm-12 col-xl-3">
+        <div class="card">
+            <div class="card-body text-center">
+                <div class="profile-avatar mb-4">
+                    {{ image('http://services.runescape.com/m=avatar-rs/'~rsn~'/chat.png', 'class' : 'rounded-circle img-thumbnail') }}
+                </div>
+
+                <h5 class="mb-0">{{ user.username }}</h5>
+                <span class="text-muted small">Joined {{ date("F d, Y", user.join_date|strtotime) }}</span>
+                <div id="clan"></div>
+                <div class="mt-3">
+                    {% if user.rsn %}
+                    {{ link_to('profile/view/'~replace(" ", "+", user.rsn), 'View Stats', 'target' : '_blank', 'class' : 'btn btn-primary btn-sm') }}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="list-group list-group-flush">
+                <div class="list-group-item py-1">
+                    <strong>RSN: </strong> {{ filter.sanitize(user.rsn, "string")|capitalize }}
+                </div>
+                <div class="list-group-item pt-1 pb-3">
+                    <strong>Views: </strong> {{ searches is not null ? searches.search_time : 0 }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-xl-9">
+        {{ content() }}
+        <div class="card">
+        <ul class="nav nav-tabs tabs-bordered text-uppercase" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                    Password
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="email-tab" data-toggle="tab" href="#email" role="tab" aria-controls="email" aria-selected="true">
+                    Email
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="email" aria-selected="true">
+                    Settings
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade p-3" id="home" role="tabpanel" aria-labelledby="home-tab">
+                {{ form('profile', 'method' : 'post') }}
+                <div class="form-group">
+                    <label for="password">Current Password</label>
+                    {{ password_field('current', 'class' : 'form-control') }}
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="password">New Password</label>
+                    {{ text_field('new', 'class' : 'form-control') }}
+                </div>
+                <div class="form-group">
+                    <label for="password">Repeat Password</label>
+                    {{ text_field('repeat', 'class' : 'form-control') }}
+                </div>
+                <div class="form-group">
+                    {{ hidden_field('type', 'value' : 'pass') }}
+                    {{ hidden_field(security.getTokenKey(), 'value' : security.getToken()) }}
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+                {{ end_form() }}
+            </div>
+
+            <div class="tab-pane fade p-3" id="email" role="tabpanel" aria-labelledby="home-tab">
+                {{ form('profile', 'method' : 'post') }}
+                <div class="form-group">
+                    <label for="password">Current Password</label>
+                    {{ password_field('current', 'class' : 'form-control') }}
+                </div>
+                <hr>
+                <div class="form-group">
+                    <label for="password">Email Address</label>
+                    {{ email_field('email_address', 'class' : 'form-control', 'value' : user.email) }}
+                </div>
+                <div class="form-group">
+                    {{ hidden_field('type', 'value' : 'email') }}
+                    {{ hidden_field(security.getTokenKey(), 'value' : security.getToken()) }}
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+                {{ end_form() }}
+            </div>
+
+            <div class="tab-pane fade show active p-3" id="settings" role="tabpanel" aria-labelledby="home-tab">
+                {{ form('profile', 'method' : 'post') }}
+                <div class="form-group">
+                    <label for="newrsn">RSN</label>
+                    {{ text_field('newrsn', 'class' : 'form-control', 'value' : rsn) }}
+                    <span class="small">This is your runescape account name.</span>
+                </div>
+                <div class="form-group">
+                    <label for="newrsn">Profile Status</label>
+                    {{ text_field('profile_status', 'class' : 'form-control', 'value' : profile_status) }}
+                    <span class="small">Display a status on your user profile.</span>
+                </div>
+                <div class="form-group">
+                    <label for="newrsn">Twitch Profile</label>
+                    {{ text_field('twitch_profile', 'class' : 'form-control', 'value' : twitch_profile) }}
+                    <span class="small">Display your Twitch link on your profile.</span>
+                </div>
+                <div class="form-group">
+                    <label for="newrsn">Youtube Profile</label>
+                    {{ text_field('youtube_profile', 'class' : 'form-control', 'value' : youtube_profile) }}
+                    <span class="small">Display your Youtube link on your profile.</span>
+                </div>
+                <div class="form-group">
+                    <label for="newrsn">Twitter Profile</label>
+                    {{ text_field('twitter_profile', 'class' : 'form-control', 'value' : twitter_profile) }}
+                    <span class="small">Display your Twitter link on your profile.</span>
+                </div>
+                <div class="form-group">
+                    <label for="newrsn">Instagram Profile</label>
+                    {{ text_field('instagram_profile', 'class' : 'form-control', 'value' : instagram_profile) }}
+                    <span class="small">Display your Instagram link on your profile.</span>
+                </div>
+                <div class="checkbox checkbox-primary mb-0">
+                    <input id="public" name="profile_public" type="checkbox"  {{ (user.profile_visible ? 'checked="checked"' : '') }}>
+                    <label for="public">
+                        Profile is Public
+                    </label>
+                </div>
+                <div class="checkbox checkbox-primary mb-0">
+                    <input id="search" name="hidersn" type="checkbox" {{ (user.hidersn ? 'checked="checked"' : '') }}>
+                    <label for="search">
+                       Appear in Search Results
+                    </label>
+                </div>
+
+                <div class="form-group mt-3">
+                    {{ hidden_field('type', 'value' : 'settings') }}
+                    {{ hidden_field(security.getTokenKey(), 'value' : security.getToken()) }}
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+                {{ end_form() }}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $.ajax({
+        url: "https://services.runescape.com/m=website-data/playerDetails.ws?names=[%22{{ user.rsn }}%22]",
+        dataType: "jsonp"
+    }).done(function(msg) {
+        if (!msg[0].clan) {
+            return;
+        }
+        $('#clan').html("<a href='{{ url('clans/info/"+msg[0].clan+"') }}' target='_blank'>"+msg[0].clan+"</a>");
+    });
+</script>

@@ -1,0 +1,89 @@
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-header white">
+        Search Statistics - Last {{ days }} Days
+
+        <div class="dropdown float-right">
+            <button class="btn btn-dark btn-sm" type="button" id="refresh">
+                <i class="fal fa-sync"></i>
+            </button>
+            <button class="btn btn-dark dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ days }} days
+            </button>
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="#" id="days" data-days="7">7 Days</a>
+                <a class="dropdown-item" href="#" id="days" data-days="14">14 Days</a>
+                <a class="dropdown-item" href="#" id="days" data-days="28">28 Days</a>
+                <a class="dropdown-item" href="#" id="days" data-days="60">60 Days</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-2">
+        <canvas id="searchChart" height="200px"></canvas>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body text-center">
+        <div class="d-flex">
+            <div class="flex-fill w-100">
+                <h5 class="mb-0">{{ users|number_format }}</h5>
+                <small>Total Users</small>
+            </div>
+            <div class="flex-fill w-100">
+                <h5 class="mb-0">{{ searches|number_format }}</h5>
+                <small>Total Searches</small>
+            </div>
+            <div class="flex-fill w-100">
+                <h5 class="mb-0">{{ searchesToday|number_format }}</h5>
+                <small>Searches Today</small>
+            </div>
+            <div class="flex-fill w-100">
+                <h5 class="mb-0">{{ names|number_format }}</h5>
+                <small>Unique Searches</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{{ javascript_include("js/chart.min.js") }}
+
+<script>
+    options = {};
+
+    options.maintainAspectRatio = false;
+    options.response = true;
+    options.elements = {};
+    options.elements.line = {};
+    options.elements.point = {};
+    options.scales = {};
+    options.title = {};
+    options.tooltips = {};
+    options.tooltips.callbacks = {};
+    options.legend = {};
+    options.legend.labels = {};
+    options.elements.line.borderWidth = 1;
+    options.elements.line.fill = true;
+    options.elements.line.tension = 0;
+    options.elements.point.radius = 1;
+    options.title.display = true;
+    options.legend.display = false;
+    options.legend.position = "top";
+    options.animation = false;
+
+    new Chart(document.getElementById("searchChart").getContext('2d'), {
+        type: 'line',
+        data: {
+            labels: [<?= implode(',', $lastNDays) ?>],
+            datasets: [
+                {
+                    label: 'Searches',
+                    data: <?= json_encode(array_values($chartData)) ?>,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.03)'
+                }
+            ]
+        },
+        options: options
+    });
+</script>

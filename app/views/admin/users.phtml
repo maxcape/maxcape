@@ -1,0 +1,46 @@
+<div class="row my-5">
+   {{partial('partials/admincp/sidebar') }}
+    <div class="col-sm-12 col-lg-8">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Admin - Users</h6>
+            </div>
+
+            <table class="table table-hover table-striped table-borderless mb-0">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Donator</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for userData in userList.items %}
+                <tr>
+                    <th scope="row">{{userData.userid}}</th>
+                    <td>{{userData.username}}</td>
+                    <td>{{formatRank(userData.privilege_level)}}</td>
+                    <td>{{userData.donator}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+        {% if userList.total_pages > 0 %}
+        <div class="row my-4">
+            <div class="" role="group" aria-label="Basic example" style="margin:auto;">
+                {{ link_to('admin/users/'~userList.first, '<i class="fas fa-angle-double-left"></i>', 'class' : 'btn btn-primary') }}
+                {{ link_to('admin/users/'~userList.before, '<i class="fas fa-angle-left"></i>', 'class' : 'btn btn-primary') }}
+
+                {{ link_to('admin/users/'~userList.before, 'Page '~userList.current~' of '~userList.total_pages, 'class' : 'btn btn-link disabled text-white') }}
+
+                {{ link_to('admin/users/'~userList.next, '<i class="fas fa-angle-right"></i>', 'class' : 'btn btn-primary') }}
+                {{ link_to('admin/users/'~userList.last, '<i class="fas fa-angle-double-right"></i>', 'class' : 'btn btn-primary') }}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>

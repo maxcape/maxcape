@@ -1,0 +1,20 @@
+{{ partial('bestiary/search') }}
+
+<div class="row pb-5">
+    <div class="col-sm-12">
+        <div class="card shadow-sm card-scroll">
+            <div class="card-header">
+                Found {{ npcs|count }} NPCS within {{ area.area_name }}
+            </div>
+            <div class="list-group list-alternate list-group-flush">
+                {% for npc in npcs %}
+                <div class="list-group-item">
+                    {{ link_to('bestiary/beast/'~npc.npc_id, npc.npc_name, 'target' : '_blank') }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {{ content() }}
+    </div>
+</div>

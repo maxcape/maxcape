@@ -1,0 +1,126 @@
+<div id="loading" class="my-5">
+    <div class="text-center">
+        {{ image('https://runescape.wiki/images/5/5f/Goebie.png?4a51c', 'height' : '150px') }}
+        <h1>Loading...please wait.</h1>
+        <p>The goebies are working as fast as they can</p>
+
+        <div class="progress" style="width:160px;margin:auto;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let username = '{{ filter.sanitize(username, "string") }}';
+    let sort = null;
+    let order = null;
+    let locked = false;
+
+    setTimeout(function() {
+        $.post('{{ url("profile/data") }}', {
+            username : username
+        }, function(data) {
+            $('#loading').html(data);
+        });
+    }, 500);
+
+    $(document).on('click', '#level', function(event) {
+        event.preventDefault();
+
+        if (locked) {
+            return;
+        }
+
+        locked = true;
+
+        sort  = 'level';
+        order = order === 'asc' ? 'desc' : 'asc';
+
+        loadStats();
+    });
+
+    $(document).on('click', '#experience', function(event) {
+        event.preventDefault();
+
+        if (locked) {
+            return;
+        }
+
+        locked = true;
+
+        sort  = 'exp';
+        order = order === 'asc' ? 'desc' : 'asc';
+
+        loadStats();
+    });
+
+    $(document).on('click', '#next', function(event) {
+        event.preventDefault();
+
+        if (locked) {
+            return;
+        }
+
+        locked = true;
+
+        sort  = 'next';
+        order = order === 'asc' ? 'desc' : 'asc';
+
+        loadStats();
+    });
+
+    $(document).on('click', '#rank', function(event) {
+        event.preventDefault();
+
+        if (locked) {
+            return;
+        }
+
+        locked = true;
+
+        sort  = 'rank';
+        order = order === 'asc' ? 'desc' : 'asc';
+
+        loadStats();
+    });
+
+    function loadStats() {
+        setTimeout(function() {
+            $.post('{{ url("profile/data") }}', {
+                username: username,
+                sortorder: sort + "-" + order
+            }, function (data) {
+                $('#loading').html(data);
+                locked = false;
+            });
+        }, 300);
+    }
+
+    $(document).on('change', '#filter', function(event) {
+        event.preventDefault();
+
+        if (locked) {
+            return;
+        }
+
+        locked = true;
+
+        let filter = $(this).children("option:selected").val();
+        sort = null;
+        order = null;
+
+        $('#filter-load').removeClass('d-none');
+
+        setTimeout(function() {
+            $.post('{{ url("profile/data") }}', {
+                username : username,
+                filter: filter
+            }, function(data) {
+                $('#loading').html(data);
+                $('#filter-load').addClass('d-none');
+                locked = false;
+            });
+        }, 1000);
+    })
+</script>

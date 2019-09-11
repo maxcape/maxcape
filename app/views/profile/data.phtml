@@ -1,0 +1,406 @@
+<div class="row">
+    <div class="col-sm-12 col-lg-3">
+        <div id="sidebar" class="" style="top: 80px;">
+            <div class="card shadow-sm mb-3">
+                <div class="card-body text-center">
+                    {% set avatar = "https://services.runescape.com/m=avatar-rs/" ~ replace(" ", "+", username)~"/chat.png" %}
+
+                    <div class="first circle progress-avatar mb-3" data-size='170' style="background-image:url({{ avatar }});">
+                        <div class="progress-percent">
+                            <span id="progress" class="text-info">0%</span>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-0">{{ username|capitalize }}</h5>
+
+                    <div id="clan" class="mb-3 small"></div>
+
+                    <div class="text-left">
+                        <label>Calc Filter</label>
+                        {% set current = cookies.get("type") %}
+
+                        {{ form('profile/view/'~replace(" ", "+", username), 'method' : 'get') }}
+                        <select name="filter" id="filter" class="form-control">
+                            {% for key, value in filter_types %}
+                            <option value="{{ key }}" {{ key is ''~current~'' ? 'selected' : '' }}>
+                            {{ value }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {{ end_form() }}
+                    </div>
+
+                    <p class="text-center small text-muted mt-3 mb-0 d-none" id="filter-load">
+                        <i class="fal fa-spinner fa-spin fa-pulse"></i>
+                        Loading data...please wait.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-body text-center">
+                {% for value in achievements %}
+                {{ image('img/achievements/'~value['icon']~'.png', 'data-toggle' : 'tooltip', 'data-placement' : 'top', 'title' : value['description']) }}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <p class="text-center small text-muted mt-3 mb-0">
+            Data Last Updated: {{elapsed(last_update)}}<br>
+            Next Update: {{timeLeft(next_update)}}
+        </p>
+    </div>
+
+    <div class="col-sm-12 col-lg-9">
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex text-center player-stats text-white">
+                    <div class="flex-fill">
+                        <h4 class="mb-0" data-toggle="tooltip" title="{{ overall['exp']|number_format }}">
+                            {% if overall['exp'] >= 1000000000 %}
+                            {{ (overall['exp'] / 1000000000)|number_format(2) }}
+                            <span class="text-info small">B</span>
+                            {% elseif overall['exp'] > 999999 and overall['exp'] < 1000000000 %}
+                            {{ (overall['exp'] / 1000000)|number_format(2) }}
+                            <span class="text-success small">M</span>
+                            {% elseif overall['exp'] > 1000 and overall['exp'] < 1000000 %}
+                            {{ (overall['exp'] / 1000)|number_format(2) }}
+                            <span class="text-warning small">K</span>
+                            {% else %}
+                            {{ overall['exp'] }}
+                            {% endif %}
+                        </h4>
+                        <span class="small text-muted">Total Exp</span>
+                    </div>
+                    <div class="flex-fill">
+                        {% set exn = exp_needed %}
+                        {% set max = 5400000000 %}
+
+                        {% set percent = (exp_needed / 374968717) * 100 %}
+                        {% if filterType is 'comp' %}
+                        {% set exn = 5400000000 - skillData['Overall']['exp'] %}
+                        {% set percent = (overall['exp'] / 5400000000) * 100 %}
+                        {% elseif filterType is 'max' %}
+                        {% set exn = 374968717 - exp_needed %}
+                        {% set percent = (exp_needed / 374968717) * 100 %}
+                        {% elseif filterType is '120' %}
+                        {% set exn = 2791720996 - exp_needed %}
+                        {% set percent = (exp_needed / 2877355654) * 100 %}
+                        {% endif %}
+
+                        <h4 class="mb-0" data-toggle="tooltip" title="{{ exn|number_format }}">
+                            {% if exn >= 1000000000 %}
+                            {{ (exn / 1000000000)|number_format(2) }}
+                            <span class="text-info small">B</span>
+                            {% elseif exn > 999999 and exn < 1000000000 %}
+                            {{ (exn / 1000000)|number_format(2) }}
+                            <span class="text-success small">M</span>
+                            {% elseif exn > 1000 and exn < 1000000 %}
+                            {{ (exn / 1000)|number_format(2) }}
+                            <span class="text-warning small">K</span>
+                            {% else %}
+                            {{ exn }}
+                            {% endif %}
+                        </h4>
+                        <span class="small text-muted">Exp Remaining</span>
+                    </div>
+                    <div class="flex-fill">
+                        <h4 class="mb-0">{{ combatLvl }}</h4>
+                        <span class="small text-muted">Combat Level</span>
+                    </div>
+                    <div class="flex-fill">
+                        <h4 class="mb-0">{{ overall['level']|number_format }}</h4>
+                        <span class="small text-muted">Total Level</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <ul class="nav nav-tabs tabs-bordered text-uppercase" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="skills-tab" data-toggle="tab" href="#skills" role="tab" aria-controls="skills" aria-selected="true">
+                        Skills
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="logs-tab" data-toggle="tab" href="#logs" role="tab" aria-controls="logs" aria-selected="true">
+                        Adv. Log
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="quests-tab" data-toggle="tab" href="#quests" role="tab" aria-controls="quests" aria-selected="true">
+                        Quests
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active table-responsive" id="skills" role="tabpanel" aria-labelledby="skills-tab">
+                    <table class="table table-hover table-striped mb-0 skills">
+                        <thead>
+                        <tr>
+                            <th style="width:40px;">Skill</th>
+                            <th>
+                                Level
+
+                                {% set level_order = 'none' %}
+
+                                {% if sort is 'level' %}
+                                {% set level_order = order is constant("SORT_ASC") ? 'SORT_DESC' : 'SORT_ASC' %}
+                                {% endif %}
+
+                                <span class="float-right" id="level" data-order="{{ level_order }}">
+                                    {% set url   = 'profile/view/'~format_name~'/' %}
+                                    {% set image = 'img/updown.png' %}
+
+                                    {% if sort is 'level' %}
+                                        {% if order is constant("SORT_ASC") %}
+                                            {% set url = url ~ 'level-desc' %}
+                                            {% set image = 'img/updown-up.png' %}
+                                        {% else %}
+                                            {% set url = url ~ 'level-asc' %}
+                                            {% set image = 'img/updown-down.png' %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% set url =  url ~ 'level-desc' %}
+                                    {% endif %}
+
+                                    {% if request.has("filter") %}
+                                        {% set url =  url ~ '?filter='~request.get("filter") %}
+                                    {% endif %}
+
+                                    {{ link_to(url, image(image)) }}
+                                </span>
+                            </th>
+                            <th>
+                                Experience
+
+                                {% set exp_order = 'none' %}
+
+                                {% if sort is 'experience' %}
+                                {% set exp_order = order is constant("SORT_ASC") ? 'SORT_DESC' : 'SORT_ASC' %}
+                                {% endif %}
+
+                                <span class="float-right" id="experience" data-order="{{ exp_order }}">
+                                    {% set url   = 'profile/view/'~format_name~'/' %}
+                                    {% set image = 'img/updown.png' %}
+
+                                    {% if sort is 'exp' %}
+                                        {% if order is constant("SORT_ASC") %}
+                                            {% set url = url ~ 'exp-desc' %}
+                                            {% set image = 'img/updown-up.png' %}
+                                        {% else %}
+                                            {% set url = url ~ 'exp-asc' %}
+                                            {% set image = 'img/updown-down.png' %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% set url =  url ~ 'exp-desc' %}
+                                    {% endif %}
+
+                                    {% if request.has("filter") %}
+                                        {% set url =  url ~ '?filter='~request.get("filter") %}
+                                    {% endif %}
+
+                                    {{ link_to(url, image(image)) }}
+                                </span>
+                            </th>
+                            <th>
+                                To Next Lvl
+
+                                {% set next_order = 'none' %}
+
+                                {% if sort is 'next' %}
+                                {% set next_order = order is constant("SORT_ASC") ? 'SORT_DESC' : 'SORT_ASC' %}
+                                {% endif %}
+
+                                <span class="float-right" id="next" data-order="{{ next_order }}">
+                                    {% set url   = 'profile/view/'~format_name~'/' %}
+                                    {% set image = 'img/updown.png' %}
+
+                                    {% if sort is 'next' %}
+                                        {% if order is constant("SORT_ASC") %}
+                                            {% set url = url ~ 'next-desc' %}
+                                            {% set image = 'img/updown-up.png' %}
+                                        {% else %}
+                                            {% set url = url ~ 'next-asc' %}
+                                            {% set image = 'img/updown-down.png' %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% set url =  url ~ 'next-desc' %}
+                                    {% endif %}
+
+                                    {% if request.has("filter") %}
+                                        {% set url =  url ~ '?filter='~request.get("filter") %}
+                                    {% endif %}
+
+                                    {{ link_to(url, image(image)) }}
+                                </span>
+                            </th>
+                            <th class="skill-progress">Progress</th>
+                            <th>
+                                Rank
+                                {% set rank_order = 'none' %}
+
+                                {% if sort is 'rank' %}
+                                {% set rank_order = order is constant("SORT_ASC") ? 'SORT_DESC' : 'SORT_ASC' %}
+                                {% endif %}
+
+                                <span class="float-right" id="rank" data-order="{{ rank_order }}">
+                                    {% set url   = 'profile/view/'~format_name~'/' %}
+                                    {% set image = 'img/updown.png' %}
+
+                                    {% if sort is 'rank' %}
+                                        {% if order is constant("SORT_ASC") %}
+                                            {% set url = url ~ 'rank-desc' %}
+                                            {% set image = 'img/updown-up.png' %}
+                                        {% else %}
+                                            {% set url = url ~ 'rank-asc' %}
+                                            {% set image = 'img/updown-down.png' %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% set url =  url ~ 'rank-desc' %}
+                                    {% endif %}
+
+                                    {% if request.has("filter") %}
+                                        {% set url =  url ~ '?filter='~request.get("filter") %}
+                                    {% endif %}
+
+                                    {{ link_to(url, image(image)) }}
+                                </span>
+                            </th>
+                        </tr>
+                        </thead>
+
+                        {% for skill, value in skillData %}
+                        {% if skill is not 'Overall' %}
+                        <tr>
+                            <td>
+                                <div style='width:20px' class="d-inline-block mr-1">
+                                    {{ image('img/skill_icons/'~skill|lowercase~'.png', 'class' : 'img-fluid',
+                                    'data-toggle' : 'tooltip', 'title' : skill, 'data-placement' : 'right') }}
+                                </div>
+                            </td>
+                            <td>{{ value['level'] }}</td>
+                            <td>
+                                {{ value['exp']|number_format }}
+                                {% if value['difference'] > 0 %}
+                                <span class="text-success">+{{ value['difference']|number_format }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ value['next']|number_format }}</td>
+                            <td class="skill-progress">
+                                <div class="progress bg-dark" height="10px">
+                                    <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+                                         aria-valuemin="0" aria-valuemax="100"
+                                         style="width:{{ value["percentage"]|number_format(2) }}%;">
+                                    <div class="progress-inner">
+                                        {{ value["percentage"]|number_format(2) }}%
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ value['rank']|number_format }}</td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                    </table>
+                </div>
+
+                <div class="tab-pane fade" id="logs" role="tabpanel" aria-labelledby="logs-tab">
+                    <table class="table table-hover table-striped">
+                        {% for log in data['adv_logs']['activities'] %}
+                        <tr>
+                            <td>
+                                {{ log['text'] }}<br>
+                                <small class="text-muted">{{ log['details'] }}</small>
+                            </td>
+                            <td class="text-right small">
+                                {{ log['date'] }}
+                            </td>
+                            <td></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+
+                <div class="tab-pane fade" id="quests" role="tabpanel" aria-labelledby="quests-tab">
+                    <table class="table table-hover table-striped mb-0">
+                        {% set diffArray = ['Novice','Intermediate','Experienced','Master','Grandmaster'] %}
+
+                        <thead>
+                        <tr>
+                            <th>Quest</th>
+                            <th>Difficulty</th>
+                            <th>Quest Points</th>
+                            <th>Is Member?</th>
+                            <th class="text-right">Status</th>
+                        </tr>
+                        </thead>
+                        {% for quest in data['quests'] %}
+                        <tr>
+                            <td>{{ quest['title'] }}</td>
+
+                            {% if quest['difficulty'] > diffArray|count %}
+                            <td>Special</td>
+                            {% else %}
+                            <td>{{ diffArray[quest['difficulty']] }}</td>
+                            {% endif %}
+                            <td>{{ quest['questPoints'] }}</td>
+
+                            <td>
+                                {% if quest['members'] %}
+                                {{ image('https://cdn.runescape.com/assets/img/external/runemetrics/membership-icon.png', 'class' : 'memberico') }}
+                                {% endif %}
+                            </td>
+
+                            {% set status = replace("_", " ", quest['status'])|lowercase|capitalize %}
+
+                            {% if quest['userEligible'] %}
+                            {% if quest['status'] is 'COMPLETED' %}
+                            <td class="text-success text-right">
+                                {% elseif quest['status'] is 'STARTED' %}
+                            <td class="text-warning text-right">
+                                {% else %}
+                            <td class="text-right">
+                                {% endif %}
+                                {{ status }}
+                            </td>
+                            {% else %}
+                            <td class="text-danger text-right">Not Eligible</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{ javascript_include('js/circle-progress.min.js') }}
+
+<script>
+    var c4 = $('.first.circle');
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    c4.circleProgress({
+        startAngle: -Math.PI / 4 * 6,
+        value: '{{ (percent / 100) }}',
+        lineCap: 'round',
+        fill: {color: '{{ constant("theme_colors")[''~theme_color~''] }}'}
+    });
+
+    $.ajax({
+        url: "https://services.runescape.com/m=website-data/playerDetails.ws?names=[%22{{ username }}%22]",
+        dataType: "jsonp"
+    }).done(function(msg) {
+        if (!msg[0].clan) {
+            return;
+        }
+        $('#clan').html("<a href='{{ url('clans/info/"+msg[0].clan+"') }}' target='_blank'>"+msg[0].clan+"</a>");
+    });
+
+    $('#progress').html("{{(percent|number_format(0))}}%");
+</script>

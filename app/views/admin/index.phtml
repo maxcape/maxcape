@@ -1,0 +1,51 @@
+<div class="row my-5">
+    {{partial('partials/admincp/sidebar') }}
+    <div class="col-sm-12 col-lg-8">
+        {{ content() }}
+
+        <div id="graph">
+            <h5>Loading chart....please wait. <i class="fal fa-spinner fa-spin fa-pulse"></i></h5>
+        </div>
+    </div>
+</div>
+
+<script>
+    let graph  = $('#graph');
+    let days   = 14;
+    let locked = false;
+
+    loadGraph(days);
+
+    $(document).on("click", "#refresh", function(event) {
+        event.preventDefault();
+
+        if (locked) {
+            return;
+        }
+
+        locked = true;
+        loadGraph(days);
+    });
+
+    $(document).on("click", "#days", function(event) {
+        event.preventDefault();
+
+        if (locked) {
+            return;
+        }
+
+        locked = true;
+
+        days = $(this).data("days");
+        loadGraph(days);
+    });
+
+    function loadGraph(days) {
+        $.post('{{ url("admin/graph") }}', {
+            days: days
+        }, function(data) {
+            locked = false;
+            graph.html(data);
+        });
+    }
+</script>

@@ -1,0 +1,173 @@
+<div class="row my-5">
+    <div class="col-sm-12 col-xl-4">
+        <div id="sidebar" class="" style="top: 80px;">
+            <!----- Card !------->
+            <div class="card user-card user-card-1 shadow mb-2">
+                {{image('img/profile-cover.png', 'class' : 'card-img-top') }}
+
+                <div class="card-body pt-0">
+                    <div class="user-about-block text-center">
+                        <div class="row align-items-end">
+                            <div class="col text-left pb-3">
+                                {% if online['last_active'] %}
+                                <span class="text-success">Online</span>
+                                {% else %}
+                                <span class="text-danger">Offline</span>
+                                {% endif %}
+                            </div>
+                            <div class="col">
+                                <div class="position-relative d-inline-block">
+                                    <img class="rounded-circle img-fluid wid-80" src="https://services.runescape.com/m=avatar-rs/{{ replace(" ", "+", rsn) }}/chat.png" alt="User image">
+                                </div>
+                            </div>
+                            <div class="col text-right pb-3">
+                                {% if session.has("user_auth") and username is not session.get("user_auth")['username'] %}
+                                {% if following %}
+                                {{link_to('user/view/'~username~'?unfollow', '<i class="fas fa-user-minus text-danger f-20"></i>') }}
+                                {% else %}
+                                {{link_to('user/view/'~username~'?follow', '<i class="fas fa-user-plus text-primary f-20"></i>') }}
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <h6 class="mb-1 mt-3">{{image('img/donicons/'~donator, 'class' : 'mr-1', 'data-toggle' : 'tooltip', 'title' : donTitle)}}{{username|capitalize}}</h6>
+                        <p class="mb-3">{{rankColor}}</p>
+                        {% if profile_status is not null %}
+                        <p class="mb-1">{{profile_status}}</p>
+                        {% endif %}
+                        <ul class="list-inline f-20 mt-3 mb-0">
+                            {% if twitch_profile is not null %}
+                            <li class="list-inline-item">{{link_to(twitch_profile, '<i class="fab fa-twitch"></i>', false)}}</li>
+                            {% endif %}
+                            {% if youtube_profile is not null %}
+                            <li class="list-inline-item">{{link_to(youtube_profile, '<i class="fab fa-youtube"></i>', false)}}</li>
+                            {% endif %}
+                            {% if twitter_profile is not null %}
+                            <li class="list-inline-item">{{link_to(twitter_profile, '<i class="fab fa-twitter"></i>', false)}}</li>
+                            {% endif %}
+                            {% if instagram_profile is not null %}
+                            <li class="list-inline-item">{{link_to(instagram_profile, '<i class="fab fa-instagram"></i>', false)}}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                    <hr class="wid-80 b-wid-3 my-4">
+                    <div class="row text-center">
+                        <div class="col">
+                            <h6 class="mb-1">{{follower_count}}</h6>
+                            <p class="mb-0">Followers</p>
+                        </div>
+                        <div class="col">
+                            <h6 class="mb-1" data-toggle="tooltip" title="{{following_count|number_format}}">{{modern_number_format(following_count)}}</h6>
+                            <p class="mb-0">Following</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!---- End card !------->
+            {#
+            <!---- Card !----->
+            <div class="card mt-2">
+                <div class="card-body widgets1 border border-success">
+                    <div class="icon">
+                        <i class="fal fa-trophy text-success font-30"></i>
+                    </div>
+                    <div class="text-right w-100">
+                        <h5 class="mb-0">Community Reputation</h5>
+                        <p class="mb-0 text-success">Excellent</p>
+                    </div>
+                </div>
+            </div>
+            <!---- End Card !---->
+#}
+            <style>
+                .widgets1 {
+                    display: flex;
+                    align-items: center;
+                }
+                .widgets1 .icon {
+                    width: 50px;
+                    text-align: center;
+                }
+                .font-30 {
+                    font-size: 30px;
+                }
+            </style>
+    </div>
+</div>
+<div class="col-sm-12 col-xl-8">
+    {{ content() }}
+    <div class="card shadow">
+        <div class="card-header">
+            <h6 class="card-title my-0">Recent Activity</h6>
+        </div>
+
+        <!---- start content !---->
+        <div class="p-3 rounded box-shadow">
+            {% for value in activity_data %}
+
+            {% if value['type'] == "follow" %}
+            <div class="media pt-3">
+                <img data-src="https://services.runescape.com/m=avatar-rs/{{rsn}}/chat.png" alt="32x32" class="mr-2 rounded" style="width: 32px; height: 32px;" src="https://services.runescape.com/m=avatar-rs/{{rsn}}/chat.png" data-holder-rendered="true">
+                <div class="media-body pb-0 mb-0 small border-bottom border-dark">
+                    <p class="float-left">
+                        {{link_to('user/view/'~replace(" ", "+", value['user_name']), getFormattedName(value['user_rank'], value['user_name'])) }} started following {{link_to('user/view/'~replace(" ", "+", value['author']), getFormattedName(value['other_rank'], value['author'])) }}.
+                    </p>
+                    <time class="float-right">{{ date("F d, Y h:i A", value['date']|strtotime) }} </time>
+                </div>
+            </div>
+            {% elseif value['type'] == "post" %}
+            {% set formatTitle = replace(" ", "-", value['title']|lowercase) %}
+            <div class="media pt-3">
+                <img data-src="https://services.runescape.com/m=avatar-rs/{{rsn}}/chat.png" alt="32x32" class="mr-2 rounded" style="width: 32px; height: 32px;" src="https://services.runescape.com/m=avatar-rs/{{rsn}}/chat.png" data-holder-rendered="true">
+                <div class="media-body pb-0 mb-0 small border-bottom border-dark">
+                    <p class="float-left">
+                        {{link_to('user/view/'~replace(" ", "+", value['author']), getFormattedName(value['rank'], value['author'])) }} posted {{ link_to('post/'~value['postid']~'-'~formatTitle, value['title']) }}.
+                    </p>
+                    <time class="float-right">{{ date("F d, Y h:i A", value['date']|strtotime) }} </time>
+                </div>
+            </div>
+
+            {% endif %}
+
+            {% else %}
+            This user has no recent activity.
+            {% endfor %}
+        </div>
+        <!---- End Content !---->
+    </div>
+
+</div>
+</div>
+
+<style>
+    .user-card .user-about-block {
+        margin-top: -30px;
+    }
+    .b-wid-3 {
+        border-width: 3px;
+    }
+    .wid-80 {
+        width: 80px;
+    }
+    .user-card .user-about-block {
+        margin-top: -30px
+    }
+    .user-card .user-about-block img {
+        box-shadow: 0 0 0 5px #4c5a67;
+    }
+
+    .custom-card-bg img {
+        background-color: #485561;
+        border: 1px solid #4c5a67;
+    }
+    @media only screen and (max-width:992px) {
+        .user-card .user-about-block {
+            margin-top: -10px
+        }
+        .user-card .wid-80 {
+            width: 60px
+        }
+    }
+</style>

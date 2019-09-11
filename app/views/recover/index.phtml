@@ -1,0 +1,24 @@
+<div class="row" style="margin-top: 100px;">
+    <div class="col-sm-12 col-xl-4 offset-xl-4">
+
+        <div class="text-center mb-5">
+            <h4 class="text-uppercase text-primary mb-0">MAXCAPE</h4>
+            <small class="text-muted">RECOVER</small>
+        </div>
+        {{ content() }}
+        {{ form('recover', 'method' : 'post') }}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fal fa-user fa-fw"></i></div>
+            </div>
+            {{ text_field('uname', 'class' : 'form-control', 'placeholder': 'Username') }}
+        </div>
+
+        <div class="form-group ">
+            {{ submit_button('Recover', 'class' : 'btn btn-primary px-5') }}
+            {{ link_to('login', 'Sign In', 'class' : 'ml-3 small') }}
+        </div>
+        {{ hidden_field(security.getTokenKey(), 'value' : security.getToken()) }}
+        {{ end_form() }}
+    </div>
+</div>

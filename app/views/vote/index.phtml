@@ -1,0 +1,216 @@
+<div class="row">
+    <div class="col-sm-12 text-center">
+        <h3 class="pt-5 pb-1">Vote for the Next Feature</h3>
+    </div>
+</div>
+
+{{ content() }}
+<div class="row mb-5">
+    <div class="col-sm-12 custom-size">
+        <p class="text-center">If you would like to discuss suggestions in further detail head over to our discord server by clicking {{link_to('https://discord.gg/JTTsNpa', 'here', false) }}.</p>
+        {% if session.has("user_auth") %}
+        <div class="text-center">
+            <a href="#" class="btn btn-primary mb-3" id="add-suggestion">Create Suggestion</a>
+        </div>
+        {% endif %}
+        <div id="vote_err" class="alert invisible" style="min-height:50px;"></div>
+
+       {% for data in recent25 %}
+        <div class="card border-{{ data.userid is user.userid ? 'primary' : '0' }} shadow-sm mb-3 position-relative vote-card bg-transparent">
+            <div class="bg-image"></div>
+            <div class="overlay bg-primary"></div>
+
+            <div class="card-body pl-5" style="line-height: 1.2em;">
+                <button class="vote-box border-0 btn btn-primary btn-lg" id="vote" data-voteid="{{data.id}}" rel="nofollow">
+                    <h6 class="mb-0">
+                        <i class="fas fa-caret-up"></i>
+                    </h6>
+                    <span id="vote_count" class="small">{{data.vote_count}}</span>
+                </button>
+                <h5 class="card-title mb-0">{{ data.title }}</h5>
+                {% if data.completed %}
+                <div class="suggestion-status bg-primary rounded-pill px-4">
+                    <i class="fal fa-check mr-1"></i> Quest Complete
+                </div>
+                {% endif %}
+                <p>{{data.content}}</p>
+                {{image('https://services.runescape.com/m=avatar-rs/'~data.rsn~'/chat.png', 'width': '30px', 'class': 'float-left mt-1')}}
+                <small>Suggested By</small><br>
+                {{link_to('user/view/'~data.username, getFormattedName(data.privilege_level, data.username)) }}
+                {% if user.privilege_level is 'Developer' %}
+                <div class="float-right">
+                    {{link_to('vote/complete/'~data.id, '<span class="text-success"><i class="fal fa-pencil fa-fw"></i>Complete</span>') }}
+                    {{link_to('vote/delete/'~data.id, '<span class="text-danger"><i class="fal fa-trash fa-fw"></i>Delete</span>') }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+      {% endfor %}
+    </div>
+</div>
+
+{% if user is defined and user is not null %}
+<!-- Modal -->
+<div class="modal fade" id="new-suggestion" tabindex="-1" role="dialog" aria-labelledby="new-suggestion" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-bottom-0">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Suggest a new Feature</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Want to see something new added to the website? Let us know!</p>
+                {{ form('vote', 'method' : 'post', 'id' : 'new-suggest') }}
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fal fa-heading fa-fw"></i></div>
+                    </div>
+                    {{ text_field('suggest-name', 'class' : 'form-control', 'placeholder' : 'Title') }}
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fal fa-pencil fa-fw"></i></div>
+                    </div>
+                    {{ text_area('suggest-content', 'class' : 'form-control', 'style' : 'resize: none', 'placeholder' : 'Description') }}
+                </div>
+
+                {{ submit_button('Submit Suggestion', 'class' : 'btn btn-primary px-5') }}
+
+                {{ end_form() }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+    .vote-card .bg-image:before {
+        content: ' ';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: -1;
+        border-radius: 4px;
+        -webkit-filter: opacity(10%);
+        overflow: hidden;
+    }
+    @media(min-width: 991.98px) {
+        .vote-card .bg-image:before {
+            background: url(https://i.imgur.com/HCl9QWw.png) no-repeat bottom -30px center #3bafda;
+            background-size: 100%;
+        }
+    }
+    @media(max-width: 991.97px) {
+        .vote-card .bg-image:before {
+            background: url(https://i.imgur.com/HCl9QWw.png) no-repeat top center #3bafda;
+            background-size: cover;
+        }
+    }
+    .vote-card .overlay {
+        content: ' ';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        z-index: -2;
+        border-radius: 4px;
+        overflow: hidden;
+        opacity: 0.3;
+    }
+    .vote-box {
+        position: absolute;
+        top: 22px;
+        left: -35px;
+        color: white;
+        width: 70px;
+        padding: 3px 0 14px 0;
+        line-height: 0.3em;
+    }
+
+    .suggestion-status {
+        top: 15px;
+        right: 20px;
+        height: 30px;
+        line-height: 30px;
+        color: white;
+        text-align: center;
+    }
+
+    @media(min-width: 991.98px) {
+        .suggestion-status {
+            position: absolute;
+        }
+    }
+    @media(max-width: 991.97px) {
+        .custom-size {
+            padding-left: 60px !important;
+        }
+    }
+</style>
+
+<script>
+    $(document).on("click", '#add-suggestion', function(e) {
+        if ($(this).hasClass("disabled")) {
+            e.preventDefault();
+            return true;
+        }
+
+        $('#new-suggestion').modal();
+    });
+</script>
+
+{% if user is defined and user is not null %}
+<script>
+    let name_field = $('#suggest-name');
+    let content    = $('#suggest-content');
+
+    $('#new-suggest').submit(function(event) {
+        event.preventDefault();
+
+        if (name_field.val().length === 0) {
+            return;
+        }
+
+        $.post("{{url('vote/save')}}", {
+            name: name_field.val(),
+            content: content.val(),
+        }, function (data) {
+            window.location.reload();
+        });
+    });
+
+    $(document).on("click", '#vote', function(data) {
+        event.preventDefault();
+
+        let vote_err = $('#vote_err');
+        let button = $(this);
+
+        $.post("{{url('vote/vote')}}", {
+            suggestion_id: $(this).data("voteid"),
+        }, function (data) {
+                let json = JSON.parse(data);
+
+                vote_err.removeClass("invisible");
+
+                if (json.success) {
+                    if (vote_err.hasClass("alert-danger")) {
+                        vote_err.addClass("alert-success").removeClass("alert-danger");
+                    } else {
+                        vote_err.addClass("alert-success");
+                    }
+
+                    let votes = json.votes;
+                    button.find("#vote_count").html(votes);
+                } else {
+                    if (vote_err.hasClass("alert-success")) {
+                        vote_err.addClass("alert-danger").removeClass("alert-success");
+                    } else {
+                        vote_err.addClass("alert-danger");
+                    }
+                }
+                vote_err.html(json.message);
+        });
+    });
+</script>
+{% endif %}

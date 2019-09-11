@@ -1,0 +1,48 @@
+<div class="row" style="margin-top: 100px;">
+    <div class="col-sm-12 col-xl-4 offset-xl-4">
+
+        <div class="text-center text-uppercase mb-5">
+            <h4 class="text-primary mb-0">MAXCAPE</h4>
+            <small class="text-muted">Register</small>
+        </div>
+
+        {{ content() }}
+
+        {{ form('register', 'method' : 'post') }}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fal fa-user fa-fw"></i></div>
+            </div>
+            {{ text_field('username', 'class' : 'form-control', 'placeholder' : 'Username') }}
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fal fa-lock fa-fw"></i></div>
+            </div>
+            {{ password_field('password', 'class' : 'form-control', 'placeholder' : 'Password') }}
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fal fa-envelope fa-fw"></i></div>
+            </div>
+            {{ email_field('email', 'class' : 'form-control', 'placeholder' : 'Email Address') }}
+        </div>
+
+        <div class="checkbox checkbox-primary mb-3">
+            <input id="checkbox-signup" type="checkbox">
+            <label for="checkbox-signup">
+                I Agree to the {{ link_to('pages/terms', 'Terms of Service', 'target' : '_blank') }}
+            </label>
+        </div>
+
+        <div class="form-group">
+            {{ submit_button('Create', 'class' : 'btn btn-primary px-5') }}
+            {{ link_to('login', 'Already have an Account', 'class' : 'ml-3 small') }}
+        </div>
+
+        {{ hidden_field(security.getTokenKey(), 'value' : security.getToken()) }}
+        {{ end_form() }}
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="row pb-5">
+    <div class="col-sm-12">
+        <div class="card shadow-sm card-scroll">
+            <div class="list-group list-alternate list-group-flush">
+                {% for area in data %}
+                <div class="list-group-item">
+                    {{ link_to('bestiary/area/'~replace(" ", "+", area.area_name), area.area_name) }}
+                    {% if area.in_area > 0 %}
+                    <span class="float-right small text-muted">{{ area.in_area }} Npcs in area</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        {{ content() }}
+    </div>
+</div>

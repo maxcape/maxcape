@@ -1,0 +1,108 @@
+<div class="row mt-5 mb-3">
+    <div class="col-sm-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {{ form('clans', 'method' : 'post') }}
+                <div class="form-row">
+                    <div class="col-10">
+                        {{ text_field('search', 'class' : 'form-control', 'placeholder' : 'Search Clan by Name...') }}
+                    </div>
+                    <div class="col-2">
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fal fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                {{ end_form() }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-sm-12 col-xl-3">
+        <div class="sticky-top" style="top: 20px;">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="mb-0">{{ name }}</h6>
+                </div>
+                <div class="list-group list-group-flush  list-alternate">
+                    <div class="list-group-item">
+                        <span class="float-right">{{ totalMembers }}</span>
+                        Members
+                    </div>
+                    <div class="list-group-item">
+                        <span class="float-right">
+                            {% if total_xp >= 1000000000 %}
+                            {{ (total_xp / 1000000000)|number_format(2) }}
+                            <span class="text-info small">B</span>
+                            {% elseif total_xp > 999999 and total_xp < 1000000000 %}
+                            {{ (total_xp / 1000000)|number_format(2) }}
+                            <span class="text-success small">M</span>
+                            {% elseif total_xp > 1000 and total_xp < 1000000 %}
+                            {{ (total_xp / 1000)|number_format(2) }}
+                            <span class="text-warning small">K</span>
+                            {% else %}
+                            {{ total_xp|number_format }}
+                            {% endif %}
+                        </span>
+                        Total Exp
+                    </div>
+                    <div class="list-group-item">
+                        <span class="float-right">{{ totalKills|number_format }}</span>
+                        Total Kills
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h6 class="card-title mb-0">Member Stats</h6>
+                </div>
+                <div class="list-group list-group-flush list-alternate">
+                    {% for rank, count in ranks %}
+                        <div class="list-group-item">
+                            <span class="float-right">{{ count }}</span>
+                            {{ image('img/clans/'~replace(" ", "_", rank|lowercase|ucfirst)~'_clan_rank.png') }}
+                            {{ rank }}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12 col-xl-9">
+        <div class="card">
+            <table class="table table-striped table-hover mb-0">
+            {% for member in clan %}
+                {% if member|count < 4 %}
+                    {% continue %}
+                {% endif %}
+                {% if loop.first %}
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Clan Rank</th>
+                        <th>Total Exp</th>
+                        <th>Kills</th>
+                    </tr>
+                </thead>
+                {% else %}
+                {% set username = replace("?", " ", member[0]) %}
+                <tr>
+                    <td>
+                        {{ image('img/clans/'~replace(" ", "_", member[1]|lowercase|ucfirst)~'_clan_rank.png') }}
+                        {{ link_to('profile/view/'~replace(" ", "+", username), username, 'target' : '_blank') }}
+                    </td>
+                    <td>{{ member[1] }}</td>
+                    <td>{{ member[2]|number_format }}</td>
+                    <td>{{ member[3]|number_format }}</td>
+                </tr>
+                {% endif %}
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{{ content() }}

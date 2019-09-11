@@ -1,0 +1,39 @@
+<div class="row" style="margin-top: 100px;">
+    <div class="col-sm-12 col-xl-4 offset-xl-4">
+
+        <div class="text-center mb-5">
+            <h4 class="text-uppercase text-primary mb-0">MAXCAPE</h4>
+            <small class="text-muted">LOGIN</small>
+        </div>
+
+        {{ content() }}
+        
+        {{ form('login', 'method' : 'post') }}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fal fa-user fa-fw"></i></div>
+            </div>
+            {{ text_field('username', 'class' : 'form-control', 'placeholder' : 'Username') }}
+        </div>
+
+        <div class="input-group mb-0">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fal fa-lock fa-fw"></i></div>
+            </div>
+            {{ password_field('password', 'class' : 'form-control', 'placeholder' : 'Password') }}
+        </div>
+
+        <div class="text-muted small mt-1 mb-4 text-right">
+            {{ link_to('recover', '<i class="fal fa-lock fa-fw"></i> Forgot Password') }}
+        </div>
+
+        {{ hidden_field(security.getTokenKey(), 'value' : security.getToken()) }}
+        
+        <div class="form-group ">
+            {{ submit_button('Sign In', 'class' : 'btn btn-primary px-5') }}
+            {{ link_to('register', 'Create Account', 'class' : 'ml-3 small') }}
+        </div>
+        
+        {{ end_form() }}
+    </div>
+</div>

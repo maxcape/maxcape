@@ -1,0 +1,34 @@
+{% for key, memberList in team %}
+<div class="row {{ loop.last ? 'mb-5' : 'mb-3' }}">
+    <div class="col-sm-12">
+        <h3 class="my-5">{{ key }}</h3>
+        {% set chunks = memberList|chunk(4) %}
+        {% for chunk in chunks %}
+        <div class="row">
+            {% for teamMember in chunk %}
+            <div class="col-sm-12 col-lg-3">
+                <div class="card border-0 shadow-sm mb-3">
+                    <div class="card-body text-center">
+                        {{ image('https://services.runescape.com/m=avatar-rs/'~teamMember['rsn']~'/chat.png', 'class' : 'img-fluid mb-3') }}
+                        <h5 class="card-title">{{teamMember['username']}}</h5>
+                        {% if teamMember['twitch_profile'] is not null %}
+                        {{link_to(teamMember['twitch_profile'], '<i class="fab fa-twitch"></i>', false)}}
+                        {% endif %}
+                        {% if teamMember['youtube_profile'] is not null %}
+                        {{link_to(teamMember['youtube_profile'], '<i class="fab fa-youtube"></i>', false)}}
+                        {% endif %}
+                        {% if teamMember['twitter_profile'] is not null %}
+                        {{link_to(teamMember['twitter_profile'], '<i class="fab fa-twitter"></i>', false)}}
+                        {% endif %}
+                        {% if teamMember['instagram_profile'] is not null %}
+                        {{link_to(teamMember['instagram_profile'], '<i class="fab fa-instagram"></i>', false)}}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}

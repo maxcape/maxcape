@@ -1,0 +1,91 @@
+<div class="row my-5">
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-0">Signature Generator</h5>
+                <p class="card-text small text-muted">
+                    Input your username below and select your options and click generate.
+                </p>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-sm-12 col-xl-6">
+                        {{ form('signature', 'method' : 'get', 'id' : 'sigform') }}
+                        <div class="form-group">
+                            <label for="background" class="small">Enter your RSN</label>
+                            {{ text_field('rsn', 'class' : 'form-control', 'placeholder' : 'Enter your rsn') }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="background" class="small">Select a background</label>
+                            <select name="background" class="form-control" id="background">
+                                <option value="default">Default</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="game_mode" class="small">Select a game mode</label>
+                            <select name="game_mode" class="form-control" id="mode">
+                                <option value="regular">Regular</option>
+                                <option value="ironman">Iron Man</option>
+                                <option value="hc_ironman">Hardcore Iron Man</option>
+                            </select>
+                        </div>
+
+                        <div class="checkbox checkbox-primary mb-3">
+                            <input id="virtual" name="virtual" type="checkbox">
+                            <label for="virtual">
+                                Show virtual levels
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            {{ submit_button('Generate', 'class' : 'btn btn-primary') }}
+                        </div>
+
+                        {{ end_form() }}
+                    </div>
+                    <div class="col-sm-12 col-xl-6">
+                        {{ content() }}
+                        <div id="image" class="mb-3 mt-2"></div>
+
+                    </div>
+                </div>
+
+                <hr>
+                Your signature bb code:<br>
+                <pre class="mb-0 text-white" id="url"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$('#sigform').submit(function(event) {
+    event.preventDefault();
+    var username   = $(this).find('#rsn').val();
+    var image = $('#image');
+    var url   = $('#url');
+
+    if (username.trim() === '') {
+        image.html("");
+        url.html("");
+        return;
+    }
+
+    var background = $(this).find("#background option:selected").val();
+    var mode       = $(this).find("#mode option:selected").val();
+    var virtual    = $(this).find("#virtual").is(":checked") ? "on" : "off";
+
+    username = username.replace(" ", "+");
+    var image_url = '{{ url("signature/view/'+username+'/'+mode+'/'+virtual+'/'+background+'") }}';
+
+    image.html('<img src=\''+image_url+'\' class=\'img-fluid\'>');
+    url.html('[img]https://maxcape.com'+image_url+'[/img]');
+
+
+});
+
+
+</script>

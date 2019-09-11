@@ -1,0 +1,60 @@
+header {
+    background: #9B80ED linear-gradient(135deg,#8f75da 0,#B69EFF 80%);
+    z-index: 1;
+}
+a {
+    color: #8f75da;
+}
+a:hover, a:focus, a:active {
+    color: #B69EFF;
+    text-decoration: none;
+}
+.dropdown-item:hover, .dropdown:active, .dropdown:focus {
+    color: #8f75da;
+}
+.footer-links li a:hover, .footer-links li a:hover:before {
+    color:#8f75da;
+}
+.btn-primary {
+    background-color: #8f75da;
+    border: 1px solid #8f75da;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .btn-primary.focus, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .open > .dropdown-toggle.btn-primary, .btn-primary:not([disabled]):not(.disabled).active, .btn-primary:not([disabled]):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
+    background-color: #A789FF;
+    border-color: #A789FF;
+}
+.text-info {
+    color: #8f75da !important;
+}
+h1,h2,h3,h4,h5,h6 {
+    font-family: "Montserrat-Bold", sans-serif;
+}
+.text-primary {
+    color: #8f75da !important;
+}
+a.text-primary {
+    color: #8f75da !important;
+}
+.border-primary {
+    border-color: #8f75da !important;
+}
+.bg-primary {
+    background-color: #8f75da !important;
+}
+a.text-primary:hover, a.text-primary:active, a.text-primary:hover {
+    color: #B69EFF !important;
+    text-decoration: none;
+}
+.checkbox-primary input[type="checkbox"]:checked + label::before {
+    background-color: #8f75da;
+    border-color: #8f75da;
+}
+.tabs-bordered li a.active {
+    border-bottom: 2px solid #8f75da !important;
+}
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    border-bottom: 2px solid #8f75da !important;
+}
+.skills .progress .bg-primary {
+    background-color: #8f75da !important;
+}

@@ -1,0 +1,60 @@
+<div class="row my-5">
+    {{partial('partials/admincp/sidebar') }}
+    <div class="col-sm-12 col-lg-8">
+        <div class="card shadow mb-3">
+            <div class="card-header">
+                <h6 class="card-title my-0">Admin - Payments</h6>
+            </div>
+            <table class="table table-hover table-striped table-borderless mb-0">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Paid</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Transaction Id</th>
+                    <th scope="col">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for payment in payments.items %}
+                <tr>
+                    <th scope="row">{{payment.id}}</th>
+                    <td>{{payment.username}}</td>
+                    <td>{{payment.product_name}}</td>
+                    <td>${{payment.paid}}.00</td>
+                    <td>{{payment.payment_status}}</td>
+                    <td>{{payment.transaction_id}}</td>
+                    <td>{{ date("F d, Y", payment.date|strtotime) }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        <!----<nav aria-label="payments-pagination">
+            <ul class="pagination pagination-sm justify-content-center">
+                {% if payments.last > 1 %}
+                {% for pid in payments.first..payments.last %}
+                <li class="page-item {{ pid is payments.current ?  "active" : "" }}">{{ link_to('admin/payments/'~pid, pid, 'class':'page-link') }}</li>
+                {% endfor %}
+                {% endif %}
+            </ul>
+        </nav>!----->
+        {% if payments.total_pages > 0 %}
+        <div class="row my-4">
+            <div class="" role="group" aria-label="Basic example" style="margin:auto;">
+                {{ link_to('admin/payments/'~payments.first, '<i class="fas fa-angle-double-left"></i>', 'class' : 'btn btn-primary') }}
+                {{ link_to('admin/payments/'~payments.before, '<i class="fas fa-angle-left"></i>', 'class' : 'btn btn-primary') }}
+
+                {{ link_to('admin/payments/'~payments.before, 'Page '~payments.current~' of '~payments.total_pages, 'class' : 'btn btn-link disabled text-white') }}
+
+                {{ link_to('admin/payments/'~payments.next, '<i class="fas fa-angle-right"></i>', 'class' : 'btn btn-primary') }}
+                {{ link_to('admin/payments/'~payments.last, '<i class="fas fa-angle-double-right"></i>', 'class' : 'btn btn-primary') }}
+            </div>
+        </div>
+        {% endif %}
+
+</div>
+

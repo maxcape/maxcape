@@ -1,0 +1,45 @@
+{{ javascript_include("https://www.paypalobjects.com/api/checkout.js") }}
+
+<div class="row my-5">
+    <div class="col-sm-12">
+        <div class="alert alert-info">
+            <i class="fal fa-info-circle float-left fa-3x mr-3"></i>
+            If you already have a rank and wish to upgrade to the next, you may purchase the same rank and you will be
+            upgraded to the next rank automatically. This applies to all ranks.
+        </div>
+
+        {{ content() }}
+        <div id="postdata"></div>
+
+        {% set chunks = items.toArray()|chunk(3) %}
+
+        {% for chunk in chunks %}
+            <div class="row">
+                {% for item in chunk %}
+                <div class="col-sm-12 col-xl-4">
+                    <div class="card mb-3">
+                        <div class="card-body">
+
+                            <h6 class="card-title mb-2">
+                                <span class="text-primary float-right">
+                                    ${{ item['price']|number_format(2) }}
+                                </span>
+                                {{ image(item['image'], 'style' : 'vertical-align: top;margin-top:2px;') }}
+                                <span style="color:{{ item['text_color'] }}">{{ item['title'] }}</span>
+                            </h6>
+
+                            <p class="card-text mt-3 small">{{ item['description'] }}</p>
+
+                            <hr>
+
+                            <div class="text-center">
+                                {{ partial('donate/paypal') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+</div>

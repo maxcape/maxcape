@@ -1,0 +1,16 @@
+<div class="row pb-5">
+    <div class="col-sm-12">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                Found {{ data|count }} Results matching the query '{{ query }}'
+            </div>
+            <div class="list-group list-alternate list-group-flush card-scroll">
+                {% for npc in data %}
+                <div class="list-group-item">
+                    {{ link_to('bestiary/beast/'~replace(" ", "+", npc.id), npc.name) }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
